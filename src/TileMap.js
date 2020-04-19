@@ -5,7 +5,10 @@ import Tile from './Tile';
 const generateMines = (height, width, numOfMines) => {
   const mines = [];
   while (mines.length < numOfMines) { 
-    mines.push({ col: Math.floor(Math.random() * width), row: Math.floor(Math.random() * height)});
+    const mine = { col: Math.floor(Math.random() * width), row: Math.floor(Math.random() * height)}
+    if (!mines.find(m => mine.col === m.col && mine.row === m.row)) {
+      mines.push(mine);
+    }
   }
   return mines;
 }
@@ -34,7 +37,7 @@ const TileMap = (props) => {
   const [tileState, setTileState] = useState(generateTileState(mines));
   useEffect(() => {
     setTimeout(() => {
-      setTime( Math.floor((new Date().getTime() - new Date(props.startOfGame).getTime())/ 1000))
+      // setTime( Math.floor((new Date().getTime() - new Date(props.startOfGame).getTime())/ 1000))
     }, 1000)
   }, [time, props]);
 
