@@ -37,7 +37,7 @@ const TileMap = (props) => {
   const [tileState, setTileState] = useState(generateTileState(mines));
   useEffect(() => {
     setTimeout(() => {
-      // setTime( Math.floor((new Date().getTime() - new Date(props.startOfGame).getTime())/ 1000))
+      setTime( Math.floor((new Date().getTime() - new Date(props.startOfGame).getTime())/ 1000))
     }, 1000)
   }, [time, props]);
 
