@@ -1,24 +1,19 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import TileMap from './TileMap';
 
 function App() {
+  const [height, setHeight] = useState(10);
+  const [width, setWidth] = useState(10);
+  const [numOfMines, setNumOfMines] = useState(10);
+  const [won, setWon] = useState(false)
+  const [lost, setLost] = useState(false)
+  const startOfGame = new Date();
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {!lost && !won && <TileMap startOfGame={startOfGame} winGame={() => setWon(true)} loseGame={() => setLost(true)} height={height} width={width} numOfMines={numOfMines}></TileMap>}
+      { lost && <div> You lost motherfucker </div>}
+      { won && <div> Can't believe you won</div>}
     </div>
   );
 }

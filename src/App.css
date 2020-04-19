@@ -1,38 +1,68 @@
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
   background-color: #282c34;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.Tile {
+  height: 30px;
+  width: 30px;
+  background-color: rgb(179, 179, 179);
+  color: wheat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  border-bottom: 3px solid rgb(105, 105, 105);
+  border-right: 3px solid rgb(105, 105, 105);
+  border-left: 3px solid rgb(212, 212, 212);
+  border-top: 3px solid rgb(212, 212, 212);
+  box-sizing: border-box;
+}
+.Tile.flag {
+    color: red;
+}
+.Tile.active {
+  border-top: 1px solid rgb(105, 105, 105);
+  border-left: 1px solid rgb(105, 105, 105);
+  border-right: 1px solid rgb(212, 212, 212);
+  border-bottom: 1px solid rgb(212, 212, 212);
+
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.Tile.active:nth-child(even) { background-color: rgb(202, 192, 170);}
+.Tile.active:nth-child(odd) { background-color: rgb(223, 220, 204);}
+.TileRow:nth-child(even) .Tile.active:nth-child(even) { background-color: rgb(223, 220, 204);}
+.TileRow:nth-child(even) .Tile.active:nth-child(odd) { background-color: rgb(202, 192, 170);}
+
+.TileMap {
+  display: flex;
+  flex-direction: column;
 }
+
+.TileRow {
+  display: flex;
+  flex-direction: row;
+}
+
+.GameInfo {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-bottom: 10px;
+  font-size: 24px;
+}
+
+.proximity1 { color: rgb(44, 107, 209) }
+.proximity2 { color: rgb(190, 41, 22) }
+.proximity3 { color: rgb(15, 144, 54) }
+.proximity4 { color: rgb(223, 21, 162) }
+.proximity5 { color: rgb(13, 170, 243) }
+.proximity6 { color: rgb(252, 255, 47) }
+.proximity7 { color: rgb(78, 26, 26) }
+.proximity8 { color: rgb(243, 138, 19) }
