@@ -2,10 +2,17 @@ import React, { useState } from 'react';
 import './App.css';
 import TileMap from './TileMap';
 
+const config = {
+  easy: {height: 9, width: 9, mines: 10},
+  medium: {height: 16, width: 16, mines: 40},
+  hard: {height: 30, width: 16, mines: 99},
+  extreme: {height: 30, width: 24, mines: 180},
+}
+const difficulty = 'hard';
 function App() {
-  const [height, setHeight] = useState(10);
-  const [width, setWidth] = useState(10);
-  const [numOfMines, setNumOfMines] = useState(10);
+  const [height, setHeight] = useState(config[difficulty].height);
+  const [width, setWidth] = useState(config[difficulty].width);
+  const [numOfMines, setNumOfMines] = useState(config[difficulty].mines);
   const [won, setWon] = useState(false)
   const [lost, setLost] = useState(false)
   const startOfGame = new Date();
