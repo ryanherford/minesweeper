@@ -12,6 +12,7 @@ const generateMines = (height, width, numOfMines) => {
   }
   return mines;
 }
+
 const isMine = (mines, col, row, lose) => {
   return mines.filter(mine => mine.col === col && mine.row === row).length > 0 ? 'M' : '';
 }
@@ -20,6 +21,7 @@ const isCloseToMine = (mines, col, row) => {
   const distance = (numA, numB) => Math.abs(numA - numB);
   return mines.filter(mine => distance(mine.col, col)  <= 1 && distance(mine.row, row) <= 1).length;
 }
+
 const TileMap = (props) => {
   const [mines] = useState(generateMines(props.height, props.width, props.numOfMines));
   const [time, setTime] = useState(Math.floor((new Date().getTime() - new Date(props.startOfGame).getTime())/ 1000));
@@ -34,6 +36,8 @@ const TileMap = (props) => {
     return state;
   };
   const [tileState, setTileState] = useState(generateTileState(mines));
+  
+  // time use effect
   useEffect(() => {
     const timeout = setTimeout(() => {
       setTime( Math.floor((new Date().getTime() - new Date(props.startOfGame).getTime())/ 1000))
@@ -43,38 +47,15 @@ const TileMap = (props) => {
     }
   }, [time, props]);
 
+  // tile update use effect
   useEffect(() => {
-    const tiles = [].concat(...tileState);
-    const tileStateCopy = [...tileState];
-    const a = tiles.filter(t => t.new)[0] || {};
-    if (!a.active) return;
-    const activateTiles = (row, col) => {
-      if (isCloseToMine(mines, col, row) === 0) {
-        const neighbors = [
-          [row - 1, col - 1], [row - 1, col], [row - 1, col + 1],
-          [row, col - 1],                     [row + 1, col + 1],
-          [row + 1, col - 1], [row + 1, col], [row + 1, col + 1],
-        ];
-        neighbors.forEach(n => {
-          if (n[0] < 0 || n[0] >= props.height) { return; }
-          if (n[1] < 0 || n[1] >= props.width) { return; }
-          if (tileStateCopy[n[0]][n[1]].active) { return; }
-          const updatedTile = {...tileState[n[0]][n[1]], active: true, flag: false};
-          tileStateCopy[n[0]][n[1]] = updatedTile;
-          activateTiles(n[0], n[1]);
-        });
-      }
-    }
-    const col = a.col;
-    const row = a.row;
-    activateTiles(row, col);
-    const activatedTiles = [].concat(...tileStateCopy);
+    // flatten two dimensional array
+    const activatedTiles = [].concat(...tileState);
+
     if (activatedTiles.filter(t => t.active).length === (props.height * props.width) - props.numOfMines 
     && activatedTiles.filter(t => t.active && t.mine).length === 0) {
       props.winGame();// 
     }
-    delete tileStateCopy[row][col].new
-    setTileState(tileStateCopy);
   }, [tileState, mines, props])
 
   
@@ -86,28 +67,49 @@ const TileMap = (props) => {
       return [...tileState];
     })
   }
-  const activated = (tile) => {
-    setTileState(tileState => {
-      const updatedTile = {...tile, active: tile.flag ? false : true, new: true};
-      delete tileState[tile.row][tile.col];
-      tileState[tile.row][tile.col] = updatedTile;
-      return [...tileState];
-    });
+
+  const activateTile = (tile) => {
+    if (tile.flag || tile.active) { return true;}
     if (tile.mine && !tile.flag) {
       props.loseGame();
     }
+
+    const tileStateCopy = [...tileState];
+
+    const poolTileActivation = (row, col) => {
+      if (isCloseToMine(mines, col, row) === 0) {
+        const neighbors = [
+          [row - 1, col - 1], [row - 1, col], [row - 1, col + 1],
+          [row, col - 1],                     [row + 1, col + 1],
+          [row + 1, col - 1], [row + 1, col], [row + 1, col + 1],
+        ];
+        neighbors.forEach(n => {
+          if (n[0] < 0 || n[0] >= props.height) { return; }
+          if (n[1] < 0 || n[1] >= props.width) { return; }
+          if (tileStateCopy[n[0]][n[1]].active || tileStateCopy[n[0]][n[1]].flag) { return; }
+          const updatedTile = {...tileState[n[0]][n[1]], active: true, flag: false};
+          tileStateCopy[n[0]][n[1]] = updatedTile;
+          poolTileActivation(n[0], n[1]);
+        });
+      }
+    }
+    poolTileActivation(tile.row, tile.col)
+    const updatedTile = {...tile, active: tile.flag ? false : true, new: true};
+    tileStateCopy[tile.row][tile.col] = updatedTile;
+    setTileState(tileStateCopy);
   }
   
   const rowTiles = (tileState, row) => {
     return [...tileState][row].map(tile => (
       <Tile 
-      onClickHandler={() => activated(tile)} 
+      onClickHandler={() => activateTile(tile)} 
       onContextHandler={() => flagged(tile)}
       key={`${tile.row} ${tile.col}`} 
       state={tile}>
     </Tile>
     ))
   };
+
   return (
     <div className="TileMap">
       <div className='GameInfo'>
