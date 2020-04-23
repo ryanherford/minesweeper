@@ -24,7 +24,6 @@ const isCloseToMine = (mines, col, row) => {
 
 const TileMap = (props) => {
   const [mines] = useState(generateMines(props.height, props.width, props.numOfMines));
-  const [time, setTime] = useState(Math.floor((new Date().getTime() - new Date(props.startOfGame).getTime())/ 1000));
   const generateTileState = (mines) => {
     const state = [];
     [...Array(props.width)].forEach((_, col) => {
@@ -37,15 +36,6 @@ const TileMap = (props) => {
   };
   const [tileState, setTileState] = useState(generateTileState(mines));
   
-  // time use effect
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setTime( Math.floor((new Date().getTime() - new Date(props.startOfGame).getTime())/ 1000))
-    }, 1000)
-    return () => {
-      clearTimeout(timeout);
-    }
-  }, [time, props]);
 
   // tile update use effect
   useEffect(() => {
@@ -56,6 +46,7 @@ const TileMap = (props) => {
     && activatedTiles.filter(t => t.active && t.mine).length === 0) {
       props.winGame();// 
     }
+    props.setBombCount(props.numOfMines - [].concat(...tileState).filter(t => t.flag).length)
   }, [tileState, mines, props])
 
   
@@ -69,6 +60,15 @@ const TileMap = (props) => {
   }
 
   const activateTile = (tile) => {
+    // never lose on first try
+    if ([].concat(...tileState).filter(t => t.active).length === 0 && tile.mine) {
+      tile.mine = false;
+      let {col, row} = tile;
+      while (col === tile.col || row === tile.row || isMine(mines, row, col)) {
+        col = Math.floor(Math.random() * props.width)
+        row = Math.floor(Math.random() * props.height)
+      }
+    }
     if (tile.flag || tile.active) { return true;}
     if (tile.mine && !tile.flag) { props.loseGame();}
 
@@ -97,28 +97,20 @@ const TileMap = (props) => {
     tileStateCopy[tile.row][tile.col] = updatedTile;
     setTileState(tileStateCopy);
   }
-  
   const rowTiles = (tileState, row) => {
     return [...tileState][row].map(tile => (
       <Tile 
-      onClickHandler={() => activateTile(tile)} 
-      onContextHandler={() => flagged(tile)}
-      key={`${tile.row} ${tile.col}`} 
-      state={tile}>
-    </Tile>
+        onClickHandler={() => activateTile(tile)} 
+        onContextHandler={() => flagged(tile)}
+        key={`${tile.row} ${tile.col}`} 
+        state={tile}>
+      </Tile>
     ))
   };
 
   return (
     <div className="TileMap">
-      <div className='GameInfo'>
-        <div className='timer'>
-          {time}s
-        </div>
-        <div className='bombCount'>
-          {props.numOfMines - [].concat(...tileState).filter(t => t.flag).length}
-        </div>
-      </div>
+      
       { [...Array(props.height)].map((_, i) => {
           return (
             <div key={`row${i}`} className='TileRow'>
