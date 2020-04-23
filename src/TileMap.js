@@ -70,9 +70,7 @@ const TileMap = (props) => {
 
   const activateTile = (tile) => {
     if (tile.flag || tile.active) { return true;}
-    if (tile.mine && !tile.flag) {
-      props.loseGame();
-    }
+    if (tile.mine && !tile.flag) { props.loseGame();}
 
     const tileStateCopy = [...tileState];
 
@@ -93,6 +91,7 @@ const TileMap = (props) => {
         });
       }
     }
+
     poolTileActivation(tile.row, tile.col)
     const updatedTile = {...tile, active: tile.flag ? false : true, new: true};
     tileStateCopy[tile.row][tile.col] = updatedTile;

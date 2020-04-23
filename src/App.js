@@ -8,7 +8,7 @@ const config = {
   hard: {height: 30, width: 16, mines: 99},
   extreme: {height: 30, width: 24, mines: 180},
 }
-const difficulty = 'hard';
+const difficulty = 'medium';
 function App() {
   const [height, setHeight] = useState(config[difficulty].height);
   const [width, setWidth] = useState(config[difficulty].width);
@@ -19,7 +19,7 @@ function App() {
   return (
     <div className="App">
       {!lost && !won && <TileMap startOfGame={startOfGame} winGame={() => setWon(true)} loseGame={() => setLost(true)} height={height} width={width} numOfMines={numOfMines}></TileMap>}
-      { lost && <div> You lost motherfucker </div>}
+      { lost && <div> You lost :( </div>}
       { won && <div> Can't believe you won</div>}
     </div>
   );
