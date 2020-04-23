@@ -22,20 +22,29 @@ const isCloseToMine = (mines, col, row) => {
   return mines.filter(mine => distance(mine.col, col)  <= 1 && distance(mine.row, row) <= 1).length;
 }
 
+const generateTileState = (mines, height, width) => {
+  const state = [];
+  [...Array(width)].forEach((_, col) => {
+    [...Array(height)].forEach((_, row) => {
+      state[row] = state[row] || [];
+      state[row][col] = {row, col, mine: isMine(mines, col, row, ), active: false, flag: false, content: isCloseToMine(mines, col, row)}
+    })
+  });
+  return state;
+};
+
 const TileMap = (props) => {
-  const [mines] = useState(generateMines(props.height, props.width, props.numOfMines));
-  const generateTileState = (mines) => {
-    const state = [];
-    [...Array(props.width)].forEach((_, col) => {
-      [...Array(props.height)].forEach((_, row) => {
-        state[row] = state[row] || [];
-        state[row][col] = {row, col, mine: isMine(mines, col, row, ), active: false, flag: false, content: isCloseToMine(mines, col, row)}
-      })
-    });
-    return state;
-  };
-  const [tileState, setTileState] = useState(generateTileState(mines));
+  const [mines, setMines] = useState(generateMines(props.height, props.width, props.numOfMines));
   
+  const [tileState, setTileState] = useState(generateTileState(mines, props.height, props.width));
+  
+  useEffect(() => {
+    if (!props.lost && !props.won) {
+      let mines = generateMines(props.height, props.width, props.numOfMines);
+      setTileState(generateTileState(mines, props.height, props.width));
+      setMines(mines);
+    }
+  }, [props.resetCounter, props.lost, props.won, props.height, props.width, props.numOfMines])
 
   // tile update use effect
   useEffect(() => {
@@ -60,22 +69,34 @@ const TileMap = (props) => {
   }
 
   const activateTile = (tile) => {
+    if (props.lost || props.won) {return};
     // never lose on first try
-    if ([].concat(...tileState).filter(t => t.active).length === 0 && tile.mine) {
-      tile.mine = false;
+    let validMines = [...mines];
+    let tileStateCopy = [...tileState];
+    if ([].concat(...tileState).filter(t => t.active).length === 0) {
       let {col, row} = tile;
-      while (col === tile.col || row === tile.row || isMine(mines, row, col)) {
-        col = Math.floor(Math.random() * props.width)
-        row = Math.floor(Math.random() * props.height)
+      const neighbors = [
+        [row - 1, col - 1], [row - 1, col], [row - 1, col + 1],
+        [row, col - 1],[row, col], [row, col + 1],
+        [row + 1, col - 1], [row + 1, col], [row + 1, col + 1],
+      ];
+      validMines = mines.filter(m => !neighbors.find(n => n[0] === m.row && n[1] === m.col));
+      while (validMines.length < props.numOfMines) {
+        let nRow = Math.floor(Math.random() * props.height);
+        let nCol = Math.floor(Math.random() * props.width);
+        if (!neighbors.find(n => n[0] === nRow && n[1] === nCol) && isCloseToMine(validMines, col, row) === 0) {
+          validMines.push({col: nCol, row: nRow})
+        }
       }
+      setMines(validMines)
+      tileStateCopy = generateTileState(validMines, props.height, props.width);
+      tile.mine = false;
     }
     if (tile.flag || tile.active) { return true;}
     if (tile.mine && !tile.flag) { props.loseGame();}
 
-    const tileStateCopy = [...tileState];
-
     const poolTileActivation = (row, col) => {
-      if (isCloseToMine(mines, col, row) === 0) {
+      if (isCloseToMine(validMines, col, row) === 0) {
         const neighbors = [
           [row - 1, col - 1], [row - 1, col], [row - 1, col + 1],
           [row, col - 1],                     [row, col + 1],
@@ -85,16 +106,14 @@ const TileMap = (props) => {
           if (n[0] < 0 || n[0] >= props.height) { return; }
           if (n[1] < 0 || n[1] >= props.width) { return; }
           if (tileStateCopy[n[0]][n[1]].active || tileStateCopy[n[0]][n[1]].flag) { return; }
-          const updatedTile = {...tileState[n[0]][n[1]], active: true, flag: false};
-          tileStateCopy[n[0]][n[1]] = updatedTile;
+          tileStateCopy[n[0]][n[1]].active = true;
           poolTileActivation(n[0], n[1]);
         });
       }
     }
 
     poolTileActivation(tile.row, tile.col)
-    const updatedTile = {...tile, active: tile.flag ? false : true, new: true};
-    tileStateCopy[tile.row][tile.col] = updatedTile;
+    if (!tile.flag) { tileStateCopy[tile.row][tile.col].active = true }
     setTileState(tileStateCopy);
   }
   const rowTiles = (tileState, row) => {
@@ -109,8 +128,7 @@ const TileMap = (props) => {
   };
 
   return (
-    <div className="TileMap">
-      
+    <div onMouseDown={()=> props.mouseDown()} onMouseUp={() => props.mouseUp()} className="TileMap">
       { [...Array(props.height)].map((_, i) => {
           return (
             <div key={`row${i}`} className='TileRow'>

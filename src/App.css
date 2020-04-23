@@ -10,8 +10,8 @@
 }
 
 .Tile {
-  height: 30px;
-  width: 30px;
+  height: 25px;
+  width: 25px;
   background-color: rgb(179, 179, 179);
   color: wheat;
   display: flex;
@@ -24,15 +24,24 @@
   border-top: 3px solid rgb(212, 212, 212);
   box-sizing: border-box;
 }
+.Tile:active {
+  border-top: 1px solid rgb(105, 105, 105);
+  border-left: 1px solid rgb(105, 105, 105);
+  border-bottom: 3px solid transparent;
+  border-right: 3px solid transparent;
+  background-color: rgb(159, 159, 159);
+}
 .Tile.flag {
     color: red;
 }
+.Tile.flag .content { margin-left: 6px;}
+.Tile.mine .content { margin-left: 6px;}
+
 .Tile.active {
   border-top: 1px solid rgb(105, 105, 105);
   border-left: 1px solid rgb(105, 105, 105);
   border-right: 1px solid rgb(212, 212, 212);
   border-bottom: 1px solid rgb(212, 212, 212);
-
 }
 
 .Tile.active:nth-child(even) { background-color: rgb(202, 192, 170);}
@@ -43,21 +52,73 @@
 .TileMap {
   display: flex;
   flex-direction: column;
+  border-top: 3px solid rgb(105, 105, 105);
+  border-left: 3px solid rgb(105, 105, 105);
+  border-right: 3px solid rgb(235, 235, 235);
+  border-bottom: 3px solid rgb(212, 212, 212);
+  box-sizing: border-box;
 }
 
 .TileRow {
   display: flex;
   flex-direction: row;
 }
-
-.GameInfo {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  margin-bottom: 10px;
-  font-size: 24px;
+.GameContainer {
+  padding: 10px;
+  background-color: rgb(179, 179, 179);
 }
 
+.GameInfo {
+  border-top: 3px solid rgb(105, 105, 105);
+  border-left: 3px solid rgb(105, 105, 105);
+  border-right: 3px solid rgb(235, 235, 235);
+  border-bottom: 3px solid rgb(212, 212, 212);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 24px;
+
+}
+.smiley {
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  align-self: center;
+  min-width: 26px;
+  min-height: 26px;
+  line-height: 26px;
+  border-bottom: 3px solid rgb(105, 105, 105);
+  border-right: 3px solid rgb(105, 105, 105);
+  border-left: 3px solid rgb(212, 212, 212);
+  border-top: 3px solid rgb(212, 212, 212);
+  padding: 5px;
+  margin: 2px;
+  content: '';
+}
+.smiley:active {
+  border-top: 3px solid rgb(105, 105, 105);
+  border-left: 3px solid rgb(105, 105, 105);
+  border-bottom: 3px solid rgb(212, 212, 212);
+  border-right: 3px solid rgb(212, 212, 212);
+  background-color: rgb(159, 159, 159);
+}
+.smilec { background-position: 0 -55px;}
+.time9 {background-position: -117px 0}
+
+.timer {
+  margin: 5px;
+  color: red;
+  min-width: 50px;
+}
+.bombCount {
+  margin:5px;
+  color: red;
+  min-width: 50px;
+}
+.smileyFace {
+  margin: 5px;
+}
 .proximity1 { color: rgb(44, 107, 209) }
 .proximity2 { color: rgb(190, 41, 22) }
 .proximity3 { color: rgb(15, 144, 54) }

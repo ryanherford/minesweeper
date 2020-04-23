@@ -1,6 +1,7 @@
 import React, { useState, useEffect} from 'react';
 import './App.css';
 import TileMap from './TileMap';
+import SmileyFace from './SmileyFace';
 
 const config = {
   easy: {height: 9, width: 9, mines: 10},
@@ -8,41 +9,65 @@ const config = {
   hard: {height: 30, width: 16, mines: 99},
   extreme: {height: 30, width: 24, mines: 180},
 }
-const difficulty = 'medium';
+const difficulty = 'extreme';
 function App() {
   const [height, setHeight] = useState(config[difficulty].height);
   const [width, setWidth] = useState(config[difficulty].width);
   const [numOfMines, setNumOfMines] = useState(config[difficulty].mines);
+  const [resetCounter, setResetCounter] = useState(0);
   const [won, setWon] = useState(false);
   const [lost, setLost] = useState(false);
   const [bombCount, setBombCount] = useState(numOfMines);
+  const [smileyState, setSmileyState] = useState('c');
   const [startOfGame] = useState(new Date());
   const [time, setTime] = useState(Math.floor((new Date().getTime() - new Date(startOfGame).getTime())/ 1000));
-
+  const reset = () => {
+    setWon(false);
+    setLost(false);
+    setResetCounter(resetCounter => resetCounter + 1);
+    console.log('yes');
+  }
+  useEffect(() => {
+    if (won) { setSmileyState('w');}
+    if (lost) {setSmileyState('x');}
+    if (!won && !lost) {setSmileyState('c')}
+  }, [won, lost])
   // time use effect
   useEffect(() => {
+    if (lost) { return };
+    if (time >= 999) { return };
     const timeout = setTimeout(() => {
       setTime( Math.floor((new Date().getTime() - new Date(startOfGame).getTime())/ 1000))
     }, 1000)
     return () => {
       clearTimeout(timeout);
     }
-  }, [time, startOfGame]);
+  }, [time, startOfGame, lost]);
 
   return (
     <div className="App">
-      <div className='GameInfo'>
-        <div className='timer'>
-          {time}s
+      <div className="GameContainer">
+        <div className='GameInfo'>
+          <div className='timer'>
+            {time}s
+          </div>
+          <SmileyFace reset={()=> reset()} state={smileyState}></SmileyFace>
+          <div className='bombCount'>
+            {bombCount}
+          </div>
         </div>
-        <div className='bombCount'>
-          {bombCount}
-        </div>
+        <TileMap 
+          mouseDown={() => {console.log('mousedown'); if (!lost && !won) setSmileyState('o')}} 
+          mouseUp={() => { if (!lost && !won)setSmileyState('c')}}
+          setBombCount={setBombCount} 
+          winGame={() => setWon(true)} 
+          loseGame={() => {setLost(true)}} 
+          resetCounter={resetCounter}
+          lost={lost}
+          won={won}
+          height={height} width={width} 
+          numOfMines={numOfMines}></TileMap>
       </div>
-      {!lost && !won &&
-        <TileMap setBombCount={setBombCount} winGame={() => setWon(true)} loseGame={() => setLost(true)} height={height} width={width} numOfMines={numOfMines}></TileMap>}
-      { lost && <div> You lost :( </div>}
-      { won && <div> Can't believe you won</div>}
     </div>
   );
 }
