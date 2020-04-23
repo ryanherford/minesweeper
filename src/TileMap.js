@@ -80,7 +80,7 @@ const TileMap = (props) => {
       if (isCloseToMine(mines, col, row) === 0) {
         const neighbors = [
           [row - 1, col - 1], [row - 1, col], [row - 1, col + 1],
-          [row, col - 1],                     [row + 1, col + 1],
+          [row, col - 1],                     [row, col + 1],
           [row + 1, col - 1], [row + 1, col], [row + 1, col + 1],
         ];
         neighbors.forEach(n => {
