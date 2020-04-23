@@ -93,7 +93,13 @@ const TileMap = (props) => {
       tile.mine = false;
     }
     if (tile.flag || tile.active) { return true;}
-    if (tile.mine && !tile.flag) { props.loseGame();}
+    if (tile.mine && !tile.flag) { 
+      props.loseGame();
+      // blow em up
+      validMines.forEach(m => {
+        tileStateCopy[m.row][m.col].active = true;
+      });
+    }
 
     const poolTileActivation = (row, col) => {
       if (isCloseToMine(validMines, col, row) === 0) {
