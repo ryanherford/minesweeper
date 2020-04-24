@@ -1,0 +1,254 @@
+
+:root {
+  --main: rgb(179, 179, 179);
+  --dark:rgb(105, 105, 105);
+  --light: rgb(212, 212, 212);
+  --background: #282c34;
+  --secondary: rgb(202, 192, 170);
+  --tertiary: rgb(223, 220, 204);
+  --textcolor: white;
+  --tileSize: 25px;
+}
+
+@mixin outset {
+  border-bottom: 3px solid var(--dark);
+  border-right: 3px solid var(--dark);
+  border-left: 3px solid var(--light);
+  border-top: 3px solid var(--light);
+}
+
+@mixin hover {
+  border-top: 1px solid var(--dark);
+  border-left: 1px solid var(--dark);
+  border-bottom: 3px solid transparent;
+  border-right: 3px solid transparent;
+}
+
+@mixin insetTile {
+  border-top: 1px solid var(--dark);
+  border-left: 1px solid var(--dark);
+  border-right: 1px solid var(--light);
+  border-bottom: 1px solid var(--light);
+}
+
+@mixin inset {
+  border-top: 3px solid var(--dark);
+  border-left: 3px solid var(--dark);
+  border-right: 3px solid var(--light);
+  border-bottom: 3px solid var(--light);
+}
+
+
+.App {
+  text-align: center;
+  background-color: var(--background);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--textcolor);
+}
+
+.Tile {
+  height: var(--tileSize);
+  width: var(--tileSize);
+  background-color: var(--main);
+  color: wheat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  @include outset;
+  box-sizing: border-box;
+  &:active {
+    @include hover;
+    background-color: var(--secondary);
+  }
+  &.flag, &.mine {
+    color: red;
+    .content {margin-left: 6px;}
+  }
+  &.active {
+    @include insetTile;
+  }
+  &.proximity1 { color: rgb(44, 107, 209) }
+  &.proximity2 { color: rgb(190, 41, 22) }
+  &.proximity3 { color: rgb(15, 144, 54) }
+  &.proximity4 { color: rgb(223, 21, 162) }
+  &.proximity5 { color: rgb(13, 170, 243) }
+  &.proximity6 { color: rgb(252, 255, 47) }
+  &.proximity7 { color: rgb(78, 26, 26) }
+  &.proximity8 { color: rgb(243, 138, 19) }
+}
+
+.Tile.active:nth-child(even) { background-color: var(--secondary);}
+.Tile.active:nth-child(odd) { background-color: var(--tertiary);}
+.TileRow:nth-child(even) .Tile.active:nth-child(even) { background-color: var(--tertiary);}
+.TileRow:nth-child(even) .Tile.active:nth-child(odd) { background-color: var(--secondary);}
+
+.TileMap {
+  display: flex;
+  flex-direction: column;
+  @include inset;
+  box-sizing: border-box;
+}
+
+.TileRow {
+  display: flex;
+  flex-direction: row;
+}
+.GameContainer {
+  padding: 10px;
+  @include outset();
+  background-color: var(--main);
+}
+
+.GameInfo {
+  @include inset;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 24px;
+}
+.smiley {
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  align-self: center;
+  min-width: 26px;
+  min-height: 26px;
+  line-height: 26px;
+  @include outset;
+  padding: 5px;
+  margin: 2px;
+  content: '';
+}
+.smiley:active {
+  @include inset;
+  background-color: rgb(159, 159, 159);
+}
+.smilec { background-position: 0 -55px;}
+.time9 {background-position: -117px 0}
+
+.timer {
+  background-color: rgb(80, 0, 0);
+  margin: 5px;
+  color: red;
+  min-width: 50px;
+  @include inset;
+  justify-content: center;
+  padding: 2px;
+}
+.bombCount {
+  background-color: rgb(80, 0, 0);
+  display: flex;
+  @include inset;
+  justify-content: center;
+  padding: 2px 5px;
+  margin:5px;
+  color: red;
+  min-width: 50px;
+}
+.smileyFace {
+  margin: 5px;
+}
+
+
+.App[theme='dark'] {
+  --main:rgba(22, 22, 22, 0.411);
+  --dark:rgb(17, 17, 17);
+  --light: rgb(90, 90, 90);
+  --secondary:rgb(0, 0, 0);
+  --tertiary: rgb(17, 17, 17);
+}
+
+.App[theme='shapes'] {
+  --main:rgb(7, 26, 121);
+  --dark:rgb(200, 29, 72);
+  --light: rgb(200, 29, 72);
+  --secondary:rgb(7, 26, 121);
+  --tertiary: rgb(7, 26, 121);
+  .GameInfo { 
+    border: 0;
+    padding: 0;
+    align-items: center;
+    background-color: var(--main);
+    padding: 3px;
+    border-radius: 3px;
+  }
+  .timer, .bombCount {
+    border: 0px;
+    color: var(--dark);
+    background: transparent;
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 10px;
+  }
+  .smiley {
+    border-radius: 5px;
+    padding: 10px;
+  }
+  .GameContainer {
+    border: 0;
+    padding: 0;
+    background: transparent;
+  }
+  .TileMap {
+    border: 0;
+    border-radius: 3px;
+    background-color: var(--main);
+    padding: 3px;
+  }
+  .Tile {
+    border: 3px solid transparent;
+    &.active .content {
+      height: 13px;
+      font-weight: bolder;
+      font-size: 13px;
+      line-height: 13px;
+
+    }
+    &.active::before{
+      position: absolute;
+      content: '';
+      border-radius: 100px;
+      border: 3px solid var(--dark);
+      height: calc(var(--tileSize) - 8px);
+      width: calc(var(--tileSize) - 8px);
+    }
+    &.inactive::before  {
+      content: '';
+      height: calc(var(--tileSize) - 5px);
+      width: calc(var(--tileSize) - 5px);
+      background-color: var(--dark);
+      border-radius: 5px;
+    }
+    &.flag, &.mine {
+      .content {margin-left: 0;}
+    }
+    &.flag::after {  
+      border-radius: 0px;
+      position: absolute;
+      content: '';
+      height: calc(var(--tileSize) - 5px);
+      width: calc(var(--tileSize) - 5px);
+      background-color: var(--dark);
+      clip-path: polygon(0 0, 0 100%, 100% 50%);
+    }
+    &.mine.active::before {
+      border: 0px solid transparent;
+    }
+    &.mine.active::after {
+      border-radius: 0px;
+      content: '';
+      height: calc(var(--tileSize) - 5px);
+      width: calc(var(--tileSize) - 5px);
+      background-color: var(--dark);
+      clip-path: polygon(20% 0%, 0% 20%, 30% 50%, 0% 80%, 20% 100%, 50% 70%, 80% 100%, 100% 80%, 70% 50%, 100% 20%, 80% 0%, 50% 30%);
+    }
+  }
+}
+
+// press start p2p

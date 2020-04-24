@@ -1,11 +1,7 @@
 ## TODO
 
-Generate mines after first click.
 Difficulty settings
-Reset button.
-The face
 Font change
-Icons
 
 Alternate styles
     - circles and squares

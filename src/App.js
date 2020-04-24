@@ -1,7 +1,8 @@
 import React, { useState, useEffect} from 'react';
-import './App.css';
+import './App.scss';
 import TileMap from './TileMap';
 import SmileyFace from './SmileyFace';
+import Navbar from './Navbar.js';
 
 const config = {
   easy: {height: 9, width: 9, mines: 10},
@@ -25,7 +26,8 @@ function App() {
     setWon(false);
     setLost(false);
     setResetCounter(resetCounter => resetCounter + 1);
-    console.log('yes');
+    setTime(0);
+    console.log('🤩🤩🤩');
   }
   useEffect(() => {
     if (won) { setSmileyState('w');}
@@ -45,7 +47,8 @@ function App() {
   }, [time, startOfGame, lost]);
 
   return (
-    <div className="App">
+    <div className="App" theme="shapes">
+      <Navbar></Navbar>
       <div className="GameContainer">
         <div className='GameInfo'>
           <div className='timer'>
@@ -57,7 +60,7 @@ function App() {
           </div>
         </div>
         <TileMap 
-          mouseDown={() => {console.log('mousedown'); if (!lost && !won) setSmileyState('o')}} 
+          mouseDown={() => { if (!lost && !won) setSmileyState('o')}} 
           mouseUp={() => { if (!lost && !won)setSmileyState('c')}}
           setBombCount={setBombCount} 
           winGame={() => setWon(true)} 
