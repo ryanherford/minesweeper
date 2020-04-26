@@ -3,7 +3,8 @@ import './App.scss';
 import TileMap from './TileMap';
 import SmileyFace from './SmileyFace';
 import Navbar from './Navbar.js';
-import TileConfig from './tileConfig';
+const Config = require ('./config').default;
+console.log(Config);
 
 const config = {
   easy: {height: 9, width: 9, mines: 10},
@@ -33,7 +34,8 @@ function App() {
     setStartOfGame(new Date());
   }
   
-  const tileConfig = TileConfig[theme] || TileConfig['default'];
+  const tileConfig = Config.tile[theme] || Config.tile['default'];
+  const smileyConfig = Config.smiley[theme] || Config.smiley['default'];
 
   useEffect(() => {
     if (won) { setSmileyState('w');}
@@ -60,7 +62,7 @@ function App() {
           <div className='timer'>
             {time}s
           </div>
-          <SmileyFace reset={()=> reset()} state={smileyState}></SmileyFace>
+          <SmileyFace config={smileyConfig} reset={()=> reset()} state={smileyState}></SmileyFace>
           <div className='bombCount'>
             {bombCount}
           </div>

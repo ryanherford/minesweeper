@@ -26,7 +26,7 @@ const SmileyFace = (props) => {
   }
   return (
     <div className={`smiley`} onMouseDown={() => mouseDown()} onMouseUp={() => mouseUp()}>
-        {otakuconfig[state || props.state] || ''}
+        {props.config[state || props.state] || ''}
     </div>
   );
 }
