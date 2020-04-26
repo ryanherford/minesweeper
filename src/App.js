@@ -22,7 +22,7 @@ function App() {
   const [lost, setLost] = useState(false);
   const [bombCount, setBombCount] = useState(numOfMines);
   const [smileyState, setSmileyState] = useState('c');
-  const [startOfGame] = useState(new Date());
+  const [startOfGame, setStartOfGame] = useState(new Date());
   const [time, setTime] = useState(Math.floor((new Date().getTime() - new Date(startOfGame).getTime())/ 1000));
   
   const reset = () => {
@@ -30,6 +30,7 @@ function App() {
     setLost(false);
     setResetCounter(resetCounter => resetCounter + 1);
     setTime(0);
+    setStartOfGame(new Date());
   }
   
   const tileConfig = TileConfig[theme] || TileConfig['default'];
