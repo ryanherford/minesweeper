@@ -32,10 +32,7 @@ Clone it. Yarn install. Then yarn start. Simple as that
 - Font change
 - A11y
 - Alternate styles
-    - Circles and Squares (1/2 done)
     - Fully Classic (1/2 done)
-    - Modern (1/2 done)
-    - Minimalist
     - Dark Mode (1/2 done)
 
 ### Implementation

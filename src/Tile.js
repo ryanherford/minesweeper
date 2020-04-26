@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Tile = ({state, onContextHandler, onClickHandler, config}) => {
+const Tile = React.memo(({state, onContextHandler, onClickHandler, config}) => {
   // const content = state.active ? state.mine ? '💣' : state.content || '' : state.flag ? '🚩' : '' ;
   const content = state.active 
     ? state.mine ? config.mine : (config.contentMap || {})[state.content] || state.content || config.active 
@@ -21,6 +21,6 @@ const Tile = ({state, onContextHandler, onClickHandler, config}) => {
 
     </div>
   );
-}
+});
 
 export default Tile;
