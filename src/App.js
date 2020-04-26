@@ -3,6 +3,7 @@ import './App.scss';
 import TileMap from './TileMap';
 import SmileyFace from './SmileyFace';
 import Navbar from './Navbar.js';
+import TileConfig from './tileConfig';
 
 const config = {
   easy: {height: 9, width: 9, mines: 10},
@@ -12,6 +13,7 @@ const config = {
 }
 const difficulty = 'extreme';
 function App() {
+  const theme = 'shapes';
   const [height, setHeight] = useState(config[difficulty].height);
   const [width, setWidth] = useState(config[difficulty].width);
   const [numOfMines, setNumOfMines] = useState(config[difficulty].mines);
@@ -22,13 +24,16 @@ function App() {
   const [smileyState, setSmileyState] = useState('c');
   const [startOfGame] = useState(new Date());
   const [time, setTime] = useState(Math.floor((new Date().getTime() - new Date(startOfGame).getTime())/ 1000));
+  
   const reset = () => {
     setWon(false);
     setLost(false);
     setResetCounter(resetCounter => resetCounter + 1);
     setTime(0);
-    console.log('🤩🤩🤩');
   }
+  
+  const tileConfig = TileConfig[theme] || TileConfig['default'];
+
   useEffect(() => {
     if (won) { setSmileyState('w');}
     if (lost) {setSmileyState('x');}
@@ -47,7 +52,7 @@ function App() {
   }, [time, startOfGame, lost]);
 
   return (
-    <div className="App" theme="shapes">
+    <div className="App" theme={theme}>
       <Navbar></Navbar>
       <div className="GameContainer">
         <div className='GameInfo'>
@@ -60,6 +65,7 @@ function App() {
           </div>
         </div>
         <TileMap 
+          tileConfig={tileConfig}
           mouseDown={() => { if (!lost && !won) setSmileyState('o')}} 
           mouseUp={() => { if (!lost && !won)setSmileyState('c')}}
           setBombCount={setBombCount} 
