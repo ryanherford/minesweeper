@@ -4,55 +4,57 @@ import TileMap from './TileMap';
 import SmileyFace from './SmileyFace';
 import Navbar from './Navbar.js';
 const Config = require ('./config').default;
-console.log(Config);
 
 const config = {
   easy: {height: 9, width: 9, mines: 10},
   medium: {height: 16, width: 16, mines: 40},
-  hard: {height: 30, width: 16, mines: 99},
-  extreme: {height: 30, width: 24, mines: 180},
+  hard: {height: 16, width: 30, mines: 99},
+  extreme: {height: 24, width: 30, mines: 180},
 }
-const difficulty = 'extreme';
+const difficulty = 'medium';
 function App() {
-  const theme = 'shapes';
-  const [height, setHeight] = useState(config[difficulty].height);
-  const [width, setWidth] = useState(config[difficulty].width);
-  const [numOfMines, setNumOfMines] = useState(config[difficulty].mines);
+  const theme = 'lines';
+  const [state, setState] = useState({
+    height: config[difficulty].height,
+    width: config[difficulty].width,
+    numOfMines: config[difficulty].mines,
+    won: false,
+    lost: false,
+    startOfGame: new Date(),
+  })
+
   const [resetCounter, setResetCounter] = useState(0);
-  const [won, setWon] = useState(false);
-  const [lost, setLost] = useState(false);
-  const [bombCount, setBombCount] = useState(numOfMines);
+  const [bombCount, setBombCount] = useState(state.numOfMines);
   const [smileyState, setSmileyState] = useState('c');
-  const [startOfGame, setStartOfGame] = useState(new Date());
-  const [time, setTime] = useState(Math.floor((new Date().getTime() - new Date(startOfGame).getTime())/ 1000));
+  const [time, setTime] = useState(Math.floor((new Date().getTime() - new Date(state.startOfGame).getTime())/ 1000));
   
   const reset = () => {
-    setWon(false);
-    setLost(false);
+    setState(state => {
+      return {...state, won: false, lost: false, startOfGame: new Date()}
+    })
     setResetCounter(resetCounter => resetCounter + 1);
     setTime(0);
-    setStartOfGame(new Date());
   }
   
   const tileConfig = Config.tile[theme] || Config.tile['default'];
   const smileyConfig = Config.smiley[theme] || Config.smiley['default'];
 
   useEffect(() => {
-    if (won) { setSmileyState('w');}
-    if (lost) {setSmileyState('x');}
-    if (!won && !lost) {setSmileyState('c')}
-  }, [won, lost])
+    if (state.won) { setSmileyState('w');}
+    if (state.lost) {setSmileyState('x');}
+    if (!state.won && !state.lost) {setSmileyState('c')}
+  }, [state.won, state.lost])
   // time use effect
   useEffect(() => {
-    if (lost) { return };
+    if (state.lost) { return };
     if (time >= 999) { return };
     const timeout = setTimeout(() => {
-      setTime( Math.floor((new Date().getTime() - new Date(startOfGame).getTime())/ 1000))
+      setTime( Math.floor((new Date().getTime() - new Date(state.startOfGame).getTime())/ 1000))
     }, 1000)
     return () => {
       clearTimeout(timeout);
     }
-  }, [time, startOfGame, lost]);
+  }, [time, state.startOfGame, state.lost]);
 
   return (
     <div className="App" theme={theme}>
@@ -69,16 +71,16 @@ function App() {
         </div>
         <TileMap 
           tileConfig={tileConfig}
-          mouseDown={() => { if (!lost && !won) setSmileyState('o')}} 
-          mouseUp={() => { if (!lost && !won)setSmileyState('c')}}
+          mouseDown={() => { if (!state.lost && !state.won) setSmileyState('o')}} 
+          mouseUp={() => { if (!state.lost && !state.won)setSmileyState('c')}}
           setBombCount={setBombCount} 
-          winGame={() => setWon(true)} 
-          loseGame={() => {setLost(true)}} 
+          winGame={() => setState(state => ({...state, won: true}))} 
+          loseGame={() =>  setState(state => ({...state, lost: true}))} 
           resetCounter={resetCounter}
-          lost={lost}
-          won={won}
-          height={height} width={width} 
-          numOfMines={numOfMines}></TileMap>
+          lost={state.lost}
+          won={state.won}
+          height={state.height} width={state.width} 
+          numOfMines={state.numOfMines}></TileMap>
       </div>
     </div>
   );

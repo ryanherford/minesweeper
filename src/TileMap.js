@@ -6,7 +6,6 @@ import {generateMines, generateTileState, isCloseToMine} from './TileMapUtils';
 
 const TileMap = (props) => {
   const [mines, setMines] = useState(generateMines(props.height, props.width, props.numOfMines));
-  
   const [tileState, setTileState] = useState(generateTileState(mines, props.height, props.width));
   
   useEffect(() => {
