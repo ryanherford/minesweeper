@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Tile = React.memo(({state, onContextHandler, onClickHandler, config}) => {
+const Tile = React.memo(({state, onContextHandler, onClickHandler, config}) => {;
   // const content = state.active ? state.mine ? '💣' : state.content || '' : state.flag ? '🚩' : '' ;
   const content = state.active 
     ? state.mine ? config.mine : (config.contentMap || {})[state.content] || state.content || config.active 
@@ -9,10 +9,10 @@ const Tile = React.memo(({state, onContextHandler, onClickHandler, config}) => {
     e.preventDefault();
     onContextHandler()
   };
-  const className = `Tile ${state.active ? 'active' : state.flag? '' :'inactive'} proximity${state.content} ${state.flag ? 'flag' : ''}  ${state.mine ? 'mine' : ''}`
+  const className = `Tile ${state.active ? 'active' : state.flag? '' :'inactive'} proximity${state.content} ${state.flag ? 'flag' : ''}  ${state.mine ? 'mine' : ''} ${state.helper ? 'helper': ''}`
   return (
     <div 
-      onClick={() => { console.time('activate');onClickHandler()}}
+      onClick={() => {onClickHandler()}}
       onContextMenu={(e) => context(e)}
       className={className}>
       <div className='content'>

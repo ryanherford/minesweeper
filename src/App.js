@@ -1,86 +1,126 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect, useReducer} from 'react';
 import './App.scss';
 import TileMap from './TileMap';
 import SmileyFace from './SmileyFace';
 import Navbar from './Navbar.js';
+import {generateMines, generateTileState, findHelper} from './TileMapUtils';
+
 const Config = require ('./config').default;
 
-const config = {
-  easy: {height: 9, width: 9, mines: 10},
-  medium: {height: 16, width: 16, mines: 40},
-  hard: {height: 16, width: 30, mines: 99},
-  extreme: {height: 24, width: 30, mines: 180},
+const mines = generateMines.apply(Array.from(Config.difficultyMapping['medium']));
+const initialState = {
+  helper: undefined,
+  smileyState: 'c',
+  difficulty: 'medium',
+  theme: 'lines',
+  game_state: 'idle',
+  startGame: new Date(),
+  height: Config.difficultyMapping['medium'].height,
+  width: Config.difficultyMapping['medium'].width,
+  numOfMines: Config.difficultyMapping['medium'].mines,
+  mines: mines,
+  tileState: generateTileState(
+    mines, 
+    Config.difficultyMapping['medium'].height, 
+    Config.difficultyMapping['medium'].width
+  ),
+  flags: [],
+  time: 0,
 }
-const difficulty = 'medium';
-function App() {
-  const theme = 'lines';
-  const [state, setState] = useState({
-    height: config[difficulty].height,
-    width: config[difficulty].width,
-    numOfMines: config[difficulty].mines,
-    won: false,
-    lost: false,
-    startOfGame: new Date(),
-  })
 
-  const [resetCounter, setResetCounter] = useState(0);
-  const [bombCount, setBombCount] = useState(state.numOfMines);
-  const [smileyState, setSmileyState] = useState('c');
-  const [time, setTime] = useState(Math.floor((new Date().getTime() - new Date(state.startOfGame).getTime())/ 1000));
-  
-  const reset = () => {
-    setState(state => {
-      return {...state, won: false, lost: false, startOfGame: new Date()}
-    })
-    setResetCounter(resetCounter => resetCounter + 1);
-    setTime(0);
+const appStateReducer = (state, action) => {
+  switch (action.type) {
+    case 'UPDATE_SMILEY':
+      return {...state, smileyState: action.payload }
+    case 'UPDATE_DIFFICULTY':
+      return {...state, difficulty: action.payload }
+    case 'UPDATE_GAME_STATE':
+      return {...state, game_state: action.payload }
+    case 'UPDATE_START_GAME':
+      return {...state, startGame: action.payload }
+    case 'UPDATE_TIME':
+      return {...state, time: action.payload }
+    case 'UPDATE_HELPER':
+      return {
+        ...state,
+        helper: (!state.helper || (state.helper && state.tileState[state.helper.row][state.helper.col].active)) ? findHelper(state.tileState) : state.helper ,
+      }
+    case 'UPDATE_TILE_STATE':
+      return {
+        ...state, 
+        game_state: 'playing', 
+        tileState: action.payload, 
+        startGame: state.game_state === 'idle' ? new Date() : state.startGame,
+        lastMoveTime: state.game_state === 'playing' ? new Date(): undefined
+      }
+      case 'UPDATE_STATE':
+        return {...state, ...action.payload}
+    case 'RESET_GAME':
+      const mines = generateMines(...Array.from(Config.difficultyMapping[state.difficulty]));
+      return {
+        ...state, 
+        game_state: 'idle', 
+        startOfGame: new Date(), 
+        smileyState: 'c', 
+        time: 0,
+        mines: mines,
+        tileState: generateTileState(mines, state.height, state.width),
+        flags: [],
+      }
+    case 'LOSE_GAME':
+      state.mines.forEach(m => { state.tileState[m.row][m.col].active = true;})
+      return {
+        ...state, 
+        game_state: 'lost', 
+        smileyState: 'x',
+        tileState: state.tileState, 
+      }
+    case 'WIN_GAME':
+      return {...state, game_state: 'won'}
+    default:
+      return state;
   }
-  
-  const tileConfig = Config.tile[theme] || Config.tile['default'];
-  const smileyConfig = Config.smiley[theme] || Config.smiley['default'];
+}
 
-  useEffect(() => {
-    if (state.won) { setSmileyState('w');}
-    if (state.lost) {setSmileyState('x');}
-    if (!state.won && !state.lost) {setSmileyState('c')}
-  }, [state.won, state.lost])
+
+function App() {
+  const [appState, dispatch] = useReducer(appStateReducer, initialState);
+  const [resetCounter] = useState(0);
+  
   // time use effect
   useEffect(() => {
-    if (state.lost) { return };
-    if (time >= 999) { return };
+    if (appState.game_state !== 'playing') { return };
+    if (appState.time >= 999) { return };
     const timeout = setTimeout(() => {
-      setTime( Math.floor((new Date().getTime() - new Date(state.startOfGame).getTime())/ 1000))
+      dispatch({type: 'UPDATE_TIME', payload: Math.floor((new Date().getTime() - new Date(appState.startGame).getTime())/ 1000)})
+      const threshold =  Math.floor((new Date().getTime() - new Date(appState.lastMoveTime).getTime())/ 1000) > 4;
+      if (appState.lastMoveTime && threshold) {
+        dispatch({ type: 'UPDATE_HELPER'});
+      }
     }, 1000)
     return () => {
       clearTimeout(timeout);
     }
-  }, [time, state.startOfGame, state.lost]);
+  }, [appState.time, appState.startGame, appState.game_state, appState.lastMoveTime, appState.tileState ]);
 
   return (
-    <div className="App" theme={theme}>
+    <div className="App" theme={appState.theme}>
       <Navbar></Navbar>
       <div className="GameContainer">
         <div className='GameInfo'>
           <div className='timer'>
-            {time}s
+            {appState.time}s
           </div>
-          <SmileyFace config={smileyConfig} reset={()=> reset()} state={smileyState}></SmileyFace>
+          <SmileyFace dispatch={dispatch} state={appState}></SmileyFace>
           <div className='bombCount'>
-            {bombCount}
+            {appState.numOfMines - [].concat(...appState.tileState).filter(t => t.flag).length}
           </div>
         </div>
         <TileMap 
-          tileConfig={tileConfig}
-          mouseDown={() => { if (!state.lost && !state.won) setSmileyState('o')}} 
-          mouseUp={() => { if (!state.lost && !state.won)setSmileyState('c')}}
-          setBombCount={setBombCount} 
-          winGame={() => setState(state => ({...state, won: true}))} 
-          loseGame={() =>  setState(state => ({...state, lost: true}))} 
+          dispatch={dispatch}
+          state={appState}
           resetCounter={resetCounter}
-          lost={state.lost}
-          won={state.won}
-          height={state.height} width={state.width} 
-          numOfMines={state.numOfMines}></TileMap>
+        ></TileMap>
       </div>
     </div>
   );

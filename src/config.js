@@ -70,6 +70,12 @@ export default {
             'w': 'w',
             'a': '.',
         },
+    },
+    "difficultyMapping": {
+        "easy": {"height": 9, "width": 9, "mines": 10},
+        "medium": {"height": 16, "width": 16, "mines": 40},
+        "hard": {"height": 16, "width": 30, "mines": 99},
+        "extreme": {"height": 24, "width": 30, "mines": 180},
     }
 }
 

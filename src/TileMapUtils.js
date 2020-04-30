@@ -29,9 +29,28 @@ const generateTileState = (mines, height, width, original = []) => {
   });
   return state;
 };
+const neighborActive = (tileState, tile ) => {
+  const {row, col} = tile;
+  return [
+    [row - 1, col - 1], [row - 1, col], [row - 1, col + 1],
+    [row, col - 1], [row, col + 1],[row + 1, col - 1], 
+    [row + 1, col], [row + 1, col + 1]]
+    .filter(t => tileState[t[0]] && tileState[t[0]][t[1]])  
+    .filter(t => tileState[t[0]][t[1]].active).length;
+}
+
+const findHelper = (tileState) => {
+  const tiles = [].concat(...tileState);
+  let index = Math.floor(Math.random() * tiles.length);
+  while (tiles[index].active || tiles[index].mine || !neighborActive(tileState, tiles[index])) {
+    index = Math.floor(Math.random() * tiles.length);
+  }
+  return tiles[index];  
+}
 
 export {
   generateMines,
   isCloseToMine,
   generateTileState,
+  findHelper,
 }

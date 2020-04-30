@@ -9,7 +9,10 @@
   --textcolor: white;
   --tileSize: 30px;
 }
-
+@keyframes helper {
+  from {box-shadow: 0px 0px 5px 1px #aaaaaa;}
+  to { box-shadow: 0px 0px 5px 3px #ffffff; ;}
+}
 @mixin outset {
   border-bottom: 3px solid var(--dark);
   border-right: 3px solid var(--dark);
@@ -320,6 +323,12 @@
       width: calc(var(--tileSize) - 9px);
       border: 2px solid var(--dark);
       border-radius: 6px;
+    }
+    &.inactive.helper::before  {
+      animation-name: helper;
+      animation-duration: 0.5s;
+      animation-direction: alternate;
+      animation-iteration-count: infinite;
     }
     &.flag, &.mine {
       .content {
