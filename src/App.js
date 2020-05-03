@@ -3,12 +3,15 @@ import './App.scss';
 import TileMap from './TileMap';
 import SmileyFace from './SmileyFace';
 import Navbar from './Navbar.js';
+import Menu from './Menu.js';
 import {generateMines, generateTileState, findHelper} from './TileMapUtils';
 
 const Config = require ('./config').default;
 
 const mines = generateMines.apply(Array.from(Config.difficultyMapping['medium']));
 const initialState = {
+  hints: false,
+  displayMenu: true,
   helper: undefined,
   smileyState: 'c',
   difficulty: 'medium',
@@ -33,7 +36,13 @@ const appStateReducer = (state, action) => {
     case 'UPDATE_SMILEY':
       return {...state, smileyState: action.payload }
     case 'UPDATE_DIFFICULTY':
-      return {...state, difficulty: action.payload }
+      return {
+        ...state, 
+        difficulty: action.payload, 
+        height: Config.difficultyMapping[action.payload].height,
+        width: Config.difficultyMapping[action.payload].width,
+        numOfMines: Config.difficultyMapping[action.payload].mines,
+      }
     case 'UPDATE_GAME_STATE':
       return {...state, game_state: action.payload }
     case 'UPDATE_START_GAME':
@@ -41,6 +50,7 @@ const appStateReducer = (state, action) => {
     case 'UPDATE_TIME':
       return {...state, time: action.payload }
     case 'UPDATE_HELPER':
+      if (!state.hints) return;
       return {
         ...state,
         helper: (!state.helper || (state.helper && state.tileState[state.helper.row][state.helper.col].active)) ? findHelper(state.tileState) : state.helper ,
@@ -53,12 +63,14 @@ const appStateReducer = (state, action) => {
         startGame: state.game_state === 'idle' ? new Date() : state.startGame,
         lastMoveTime: state.game_state === 'playing' ? new Date(): undefined
       }
-      case 'UPDATE_STATE':
-        return {...state, ...action.payload}
+    case 'UPDATE_STATE':
+      return {...state, ...action.payload}
+    case 'DISPLAY_MENU':
+      return {...state, displayMenu: action.payload}
     case 'RESET_GAME':
       const mines = generateMines(...Array.from(Config.difficultyMapping[state.difficulty]));
       return {
-        ...state, 
+        ...state,
         game_state: 'idle', 
         startOfGame: new Date(), 
         smileyState: 'c', 
@@ -76,7 +88,8 @@ const appStateReducer = (state, action) => {
         tileState: state.tileState, 
       }
     case 'WIN_GAME':
-      return {...state, game_state: 'won'}
+      state.mines.forEach(m => { state.tileState[m.row][m.col].flag = true;});
+      return {...state, game_state: 'won', smileyState: 'w', tileState: state.tileState}
     default:
       return state;
   }
@@ -122,6 +135,7 @@ function App() {
           resetCounter={resetCounter}
         ></TileMap>
       </div>
+      {appState.displayMenu && <Menu dispatch={dispatch} state={appState}></Menu>}
     </div>
   );
 }

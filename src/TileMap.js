@@ -10,12 +10,11 @@ const TileMap = ({state, dispatch}) => {
   useEffect(() => {
     // flatten two dimensional array
     const activatedTiles = [].concat(...state.tileState);
-
     if (activatedTiles.filter(t => t.active).length === (state.height * state.width) - state.numOfMines 
-    && activatedTiles.filter(t => t.active && t.mine).length === 0) {
+    && activatedTiles.filter(t => t.active && t.mine).length === 0 && state.game_state !== 'won') {
       dispatch({type: 'WIN_GAME'});
     }
-  }, [state.tileState, state.mines, state, dispatch])
+  }, [state.tileState, state.mines, state, dispatch, state.game_state])
 
   const flagged = (tile) => {
     if (tile.active ) { return; }

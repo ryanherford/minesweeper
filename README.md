@@ -10,9 +10,8 @@ Clone it. Yarn install. Then yarn start. Simple as that
 ## TODO! 
 
 - Settings Menu
-    - Difficulty Menu
-    - Theme menu
-- Hint button
+    - Confirmation dialog box.
+- Hint and menu button
 - Highscores!
 - Mobile Support
 - Undo - Maybe
@@ -37,7 +36,6 @@ Clone it. Yarn install. Then yarn start. Simple as that
 
 ### Implementation
 
-- Use React Context API for better state management, explore using refs too.
-- Reorganise code.
-- SVG icon support.
+- Game mode selection
+- Localstorage for persisting settings
 - Sockets for multiplayer.

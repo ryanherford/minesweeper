@@ -159,6 +159,35 @@
   margin: 5px;
 }
 
+.overlay {
+  height: 100%;
+  position: absolute;
+  z-index:1;
+  top:0;
+  left:0;
+  width: 100%;
+  background: rgba(22, 22, 22, 0.411);
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  .menu {
+    padding: 20px;
+    width: 200px;
+    color: var(--dark);
+    @include outset();
+    z-index: 2;
+    background: var(--tertiary);
+    .menuItem {
+      margin-top:5px;
+      user-select: none;
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      font-size: 20px;
+    }
+  }
+}
+
 .App[theme='shapes'] {
   --main:rgb(7, 26, 121);
   --dark:rgb(200, 29, 72);
