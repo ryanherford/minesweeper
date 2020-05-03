@@ -17,7 +17,7 @@ const TileMap = ({state, dispatch}) => {
   }, [state.tileState, state.mines, state, dispatch, state.game_state])
 
   const flagged = (tile) => {
-    if (tile.active ) { return; }
+    if (tile.active || !['playing', 'idle'].includes(state.game_state)) { return; }
     const tileStateCopy = [...state.tileState];
     tileStateCopy[tile.row][tile.col].flag = tileStateCopy[tile.row][tile.col].flag ? false : true;
     dispatch({ type: 'UPDATE_TILE_STATE', payload: tileStateCopy});

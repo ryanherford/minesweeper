@@ -50,7 +50,7 @@ const appStateReducer = (state, action) => {
     case 'UPDATE_TIME':
       return {...state, time: action.payload }
     case 'UPDATE_HELPER':
-      if (!state.hints) return;
+      if (!state.hints) return state;
       return {
         ...state,
         helper: (!state.helper || (state.helper && state.tileState[state.helper.row][state.helper.col].active)) ? findHelper(state.tileState) : state.helper ,
