@@ -28,4 +28,4 @@ jobs:
         REPO: git@github.com:Geniusflip/quickblopg.git
         BRANCH: minesweeper
         FOLDER: .
-        SSH_PRIVATE_KEY: ${{ secrets.TOKEN }}
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
