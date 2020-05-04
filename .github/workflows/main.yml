@@ -12,21 +12,15 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  deploy:
+  repo-sync:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
-    - name: Create local changes
-      run: |
-    - name: Commit files
-      run: |
-        git config --local user.email "ryanherford@gmail.com"
-        git pull origin
-        git remote add blog https://Geniusflip:${{ secrets.PASSWORD }}@github.com/Geniusflip/quickblopg.git
-        git fetch blog
-        git fetch blog minesweeper
-        git pull --force blog minesweeper
-        git checkout blog/minesweeper
-        git reset --hard origin/master
-        git push --force
+    - name: repo-sync
+      uses: wei/git-sync@v2
+      with:
+        source_repo: "https://Geniusflip:${{ secrets.PASSWORD }}@github.com/Geniusflip/minesweeper.git"
+        source_branch: "master"
+        destination_repo: "https://Geniusflip:${{ secrets.PASSWORD }}@github.com/Geniusflip/quickblopg.git"
+        destination_branch: "minesweeper"
+
 
