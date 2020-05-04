@@ -29,8 +29,6 @@ jobs:
         git fetch blog
         echo 'checking out'
         git checkout -b blog/minesweeper
-        git pull blog minesweeper --allow-unrelated-histories
-
         echo 'reseting history'
         git reset --hard origin/master
         git push --force
