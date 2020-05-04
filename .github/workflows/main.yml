@@ -26,6 +26,7 @@ jobs:
         git fetch blog
         git fetch blog minesweeper
         git checkout blog/minesweeper
+        git pull
         git reset --hard origin/master
         git push --force
 
