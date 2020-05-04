@@ -15,7 +15,7 @@ const isMine = (mines, col, row, lose) => {
 
 const isCloseToMine = (mines, col, row) => {
   const distance = (numA, numB) => Math.abs(numA - numB);
-  return mines.filter(mine => (distance(mine.col, col)  <= 1) && (distance(mine.row, row) <= 1)).length;
+  return mines.filter(mine => (distance(mine.col, col) <= 1) && (distance(mine.row, row) <= 1)).length;
 }
 
 const generateTileState = (mines, height, width, original = []) => {

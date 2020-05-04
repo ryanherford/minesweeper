@@ -39,7 +39,7 @@ const TileMap = ({state, dispatch}) => {
       while (validMines.length < state.numOfMines) {
         let nRow = Math.floor(Math.random() * state.height);
         let nCol = Math.floor(Math.random() * state.width);
-        if (!neighbors.find(n => n[0] === nRow && n[1] === nCol) && isCloseToMine(validMines, col, row) === 0) {
+        if (!neighbors.find(n => n[0] === nRow && n[1] === nCol) && !validMines.find(m => m.row === nRow && m.col === nCol)) {
           validMines.push({col: nCol, row: nRow})
         }
       }
