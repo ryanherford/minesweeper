@@ -21,10 +21,16 @@ jobs:
     - name: Commit files
       run: |
         git config --local user.email "ryanherford@gmail.com"
+        git config --global user.name "Geniusflip"
         git remote add blog https://Geniusflip:${{ secrets.PASSWORD }}@github.com/Geniusflip/quickblopg.git
-        git fetch blog
-        git fetch blog minesweeper
-        git branch minesweeper
-        git merge master
+        echo 'here'
+        git pull origin master
+        git checkout master
+        echo 'pulling minesweeper'
+        git pull blog minesweeper --allow-unrelated-histories
+        echo 'checking out'
+        git checkout -b blog/minesweeper
+        echo 'reseting history'
+        git reset --hard origin/master
         git push --force
 
