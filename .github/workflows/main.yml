@@ -21,9 +21,10 @@ jobs:
     - name: Commit files
       run: |
         git config --local user.email "ryanherford@gmail.com"
-        git remote rename origin upstream
-        git remote add origin git@github.com:Geniusflip/quickblopg.git
-        git fetch
-        git show-ref
-        git push --force origin minesweeper
+        git remote add blog git@github.com:Geniusflip/quickblopg.git
+        git fetch blog
+        git fetch blog minesweeper
+        git branch blog/minesweeper
+        git reset --hard origin/master
+        git push --force blog minesweeper
 
