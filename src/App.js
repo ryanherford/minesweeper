@@ -99,7 +99,7 @@ const appStateReducer = (state, action) => {
 function App() {
   const [appState, dispatch] = useReducer(appStateReducer, initialState);
   const [resetCounter] = useState(0);
-  
+  console.log('checking master');
   // time use effect
   useEffect(() => {
     if (appState.game_state !== 'playing') { return };
