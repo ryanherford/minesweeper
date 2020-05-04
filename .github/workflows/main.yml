@@ -26,6 +26,5 @@ jobs:
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.TOKEN }}
-        branch: 'minesweeper'
-        repository: 'Geniusflip/quickblopg'
+        repository: 'Geniusflip/quickblopg/tree/minesweeper'
         force: true
