@@ -27,5 +27,5 @@ jobs:
       with:
         github_token: ${{ secrets.TOKEN }}
         branch: 'minesweeper'
-        repository: 'quickblopg'
+        repository: 'Geniusflip/quickblopg'
         force: true
