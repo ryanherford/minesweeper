@@ -23,6 +23,7 @@ jobs:
         git config --local user.email "ryanherford@gmail.com"
         git remote rename origin upstream
         git remote add origin git@github.com:Geniusflip/quickblopg.git
+        git fetch
         git show-ref
         git push --force origin minesweeper
 
