@@ -21,6 +21,7 @@ jobs:
     - name: Commit files
       run: |
         git config --local user.email "ryanherford@gmail.com"
+        git pull master
         git remote add blog https://Geniusflip:${{ secrets.PASSWORD }}@github.com/Geniusflip/quickblopg.git
         git fetch blog
         git fetch blog minesweeper
