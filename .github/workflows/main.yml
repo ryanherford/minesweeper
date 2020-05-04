@@ -22,9 +22,6 @@ jobs:
       run: |
         git config --local user.email "ryanherford@gmail.com"
         git config --local user.name "GitHub Action"
-        eval `ssh-agent -s`
-        echo ${{ secrets.SSH_KEY }} > access << EOF
-        ssh-add -k access
         git remote rename origin upstream
         git remote add origin git@github.com:Geniusflip/quickblopg.git
         git push --force origin minesweeper
