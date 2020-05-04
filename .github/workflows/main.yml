@@ -25,11 +25,12 @@ jobs:
         git remote add blog https://Geniusflip:${{ secrets.PASSWORD }}@github.com/Geniusflip/quickblopg.git
         echo 'here'
         git pull origin master
-        git checkout master
         echo 'pulling minesweeper'
-        git pull blog minesweeper --allow-unrelated-histories
+        git fetch blog
         echo 'checking out'
         git checkout -b blog/minesweeper
+        git pull blog minesweeper --allow-unrelated-histories
+
         echo 'reseting history'
         git reset --hard origin/master
         git push --force
