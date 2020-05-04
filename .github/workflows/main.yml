@@ -24,9 +24,8 @@ jobs:
         git config --global user.name "Geniusflip"
         git remote add blog https://Geniusflip:${{ secrets.PASSWORD }}@github.com/Geniusflip/quickblopg.git
         git pull origin master
-        git checkout blog/minesweeper
-        git pull blog minesweeper --allow-unrelated-histories
-       
+        git pull blog minesweeper
+        git checkout -b blog/minesweeper
         git reset --hard origin/master
         git push --force
 
