@@ -24,8 +24,6 @@ jobs:
         git pull origin
         git remote add blog https://Geniusflip:${{ secrets.PASSWORD }}@github.com/Geniusflip/quickblopg.git
         git fetch blog
-        git fetch blog minesweeper
-        git pull --force blog minesweeper
         git checkout blog/minesweeper
         git reset --hard origin/master
         git push --force
