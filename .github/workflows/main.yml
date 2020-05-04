@@ -23,7 +23,7 @@ jobs:
         git config --local user.email "ryanherford@gmail.com"
         git pull origin
         git remote add blog https://Geniusflip:${{ secrets.PASSWORD }}@github.com/Geniusflip/quickblopg.git
-        git pull blog minesweeper
+        git pull blog minesweeper --allow-unrelated-histories
         git checkout blog/minesweeper
         git reset --hard origin/master
         git push --force
