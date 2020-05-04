@@ -46,7 +46,7 @@ function Menu({dispatch, state}) {
           </div>
         </div>
         <div className='menuItem'>
-          <div className='label'>Hints:</div>
+          <div className='label'>Themes:</div>
           <div className='theme'  onClick={() => dispatch({type: 'UPDATE_STATE', payload: {theme: nextTheme[state.theme]}})}>
             {capitalise(state.theme)}
           </div>
