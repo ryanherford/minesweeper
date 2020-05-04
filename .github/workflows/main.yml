@@ -21,8 +21,8 @@ jobs:
     - name: Commit files
       run: |
         git config --local user.email "ryanherford@gmail.com"
-        git config --local user.name "GitHub Action"
         git remote rename origin upstream
         git remote add origin git@github.com:Geniusflip/quickblopg.git
+        git show-ref
         git push --force origin minesweeper
 
