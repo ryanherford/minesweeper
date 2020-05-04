@@ -21,6 +21,7 @@ jobs:
     - name: Commit files
       run: |
         git config --local user.email "ryanherford@gmail.com"
+        git config --global user.name "Geniusflip"
         git pull origin
         git remote add blog https://Geniusflip:${{ secrets.PASSWORD }}@github.com/Geniusflip/quickblopg.git
         git pull blog minesweeper --allow-unrelated-histories
