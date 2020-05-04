@@ -22,10 +22,14 @@ jobs:
       run: |
         git config --local user.email "ryanherford@gmail.com"
         git config --local user.name "GitHub Action"
-    - name: Deploy
-      uses: s0/git-publish-subdir-action@master
-      env:
-        REPO: git@github.com:Geniusflip/quickblopg.git
-        BRANCH: minesweeper
-        FOLDER: .
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+        ssh-add -K ${{ secrets.SSH_KEY }}
+        git remote rename origin upstream
+        git remote add origin git@github.com:Geniusflip/quickblopg.git
+        git push --force origin minesweeper
+#     - name: Deploy
+#       uses: s0/git-publish-subdir-action@master
+#       env:
+#         REPO: git@github.com:Geniusflip/quickblopg.git
+#         BRANCH: minesweeper
+#         FOLDER: .
+#         SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
