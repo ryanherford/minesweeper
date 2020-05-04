@@ -25,7 +25,6 @@ function Menu({dispatch, state}) {
     if (menuState.difficulty !== state.difficulty){
       dispatch({type: 'UPDATE_DIFFICULTY', payload: menuState.difficulty});
       dispatch({type: 'RESET_GAME'});
-      console.log('restart');
     }
     dispatch({type: 'DISPLAY_MENU', payload: false});
   }
