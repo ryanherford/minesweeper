@@ -72,7 +72,7 @@ const appStateReducer = (state, action) => {
       return {
         ...state,
         game_state: 'idle', 
-        startOfGame: new Date(), 
+        startGame: new Date(), 
         smileyState: 'c', 
         time: 0,
         mines: mines,
